@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+requests
+sentence-transformers
+langchain==0.1.20
+langchain-community==0.0.38
+faiss-cpu
+groq
+
+# Dependencies for unstructured to handle different file types
+unstructured[docx,eml,pdf]
+
+# System dependencies might be needed for unstructured on some OSes, e.g.,
+# On Debian/Ubuntu: sudo apt-get install -y libmagic1 poppler-utils
