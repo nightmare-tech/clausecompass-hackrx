@@ -7,7 +7,7 @@ sentence-transformers
 langchain==0.1.20
 langchain-community==0.0.38
 faiss-cpu
-groq
+google-genai
 
 # Dependencies for unstructured to handle different file types
 unstructured[docx,eml,pdf]
