@@ -65,9 +65,10 @@ The system operates on a simple, stateless, per-request basis, making it ideal f
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/[your-username]/[your-repo-name].git
-cd [your-repo-name]
+git clone https://github.com/nightmare-tech/clausecompass-hackrx
+cd clausecompass-hackrx
 ```
+
 2. Install the required packages:
 
 ```bash
@@ -84,7 +85,7 @@ GOOGLE_API_KEY="your_google_ai_studio_api_key"
 1. **Start the Backend Server:**
 
 ```bash
-uvicorn app:app --reload
+python app.py
 ```
 
 2. **Run the CLI Client (in a separate terminal):**
