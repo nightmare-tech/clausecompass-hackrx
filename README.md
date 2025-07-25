@@ -1,9 +1,9 @@
 # ClauseCompass 🧭 - HackRx 6.0 Submission
 
-[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Framework](https://img.shields.io/badge/Framework-FastAPI-green.svg)](https://fastapi.tiangolo.com/)
-[![AI/LLM](https://img.shields.io/badge/AI_/_LLM-Google_Gemini_1.5-purple.svg)](https://deepmind.google/technologies/gemini/)
+[![AI/LLM](https://img.shields.io/badge/AI_/_LLM-Google_Gemini_2.5-flash.svg)](https://deepmind.google/technologies/gemini/)
 
 An LLM-Powered Intelligent Query–Retrieval System built for the **Bajaj Finserv Health HackRx 6.0** hackathon. ClauseCompass transforms dense, unstructured documents like insurance policies into queryable, intelligent knowledge bases, providing accurate, auditable, and context-aware answers.
 
@@ -46,26 +46,19 @@ The system operates on a simple, stateless, per-request basis, making it ideal f
 
 ## 🛠️ Tech Stack
 
-Backend: Python, FastAPI
-
-AI / LLM: Google Gemini 1.5 Flash
-
-Vector Store: FAISS (in-memory)
-
-Embeddings: Sentence Transformers (all-MiniLM-L6-v2)
-
-Data Processing: LangChain (Text Splitters), Unstructured.io (Document Loaders)
-
-CLI / Testing: Typer, Rich, Requests
+- **Backend**: Python, FastAPI
+- **AI / LLM**: Google Gemini 1.5 Flash
+- **Vector Store**: FAISS (in-memory)
+- **CLI / Testing**: Typer, Rich, Requests
+- **Embeddings**: Sentence Transformers (all-MiniLM-L6-v2)
+- **Data Processing**: LangChain (Text Splitters), Unstructured.io (Document Loaders)
 
 ## ⚙️ Setup and Usage
 ### Prerequisites
 
-Python 3.11+
-
-A Google AI Studio API Key.
-
-System dependencies for unstructured (e.g., libmagic, poppler-utils).
+- Python
+- A Google AI Studio API Key.
+- System dependencies for unstructured (e.g., `libmagic`, `poppler-utils`).
 
 ### Installation
 
@@ -88,28 +81,28 @@ GOOGLE_API_KEY="your_google_ai_studio_api_key"
 
 ### Running the Application
 
-1. Start the Backend Server:
+1. **Start the Backend Server:**
 
 ```bash
 uvicorn app:app --reload
 ```
 
-2. Run the CLI Client (in a separate terminal):
+2. **Run the CLI Client (in a separate terminal):**
 
-- First, ensure your request.json file is present and contains the document URL and questions you want to test.
+- First, ensure your `request.json` file is present and contains the document URL and questions you want to test.
 
 - Then, run the client:
 
     ```bash
     python cli.py
     ```
-  The CLI will automatically use the request.json file and display the results from the API.
+  The CLI will automatically use the `request.json` file and display the results from the API.
 
 ## 📈 Key Learnings & Future Enhancements
 
 Our testing revealed that the final frontier for accuracy lies in the initial retrieval step. In 1 out of 10 cases, a pure semantic search failed to retrieve a specific key term (like 'Hernia') when buried in a long list.
 
-To solve this and reach near-100% accuracy, our primary future enhancement would be to implement Hybrid Search:
+To solve this and reach near-100% accuracy, our primary future enhancement would be to implement **Hybrid Search**:
 
 - Combine our current FAISS-based semantic search with a traditional keyword search algorithm (like BM25).
 - The results would be re-ranked to provide the LLM with the most relevant possible context, guaranteeing that critical keywords are never missed.
@@ -118,4 +111,4 @@ This approach would create a truly production-grade, robust, and reliable docume
 
 ## 📜 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
