@@ -11,8 +11,12 @@ ENV PYTHONUNBUFFERED 1
 # 'pkg-config' is often needed by other build systems.
 # We also clean up the apt cache afterwards to keep the image slim.
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential pkg-config && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 # --- End of fix ---
 
 # Set the working directory inside the container
