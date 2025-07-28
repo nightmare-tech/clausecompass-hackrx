@@ -8,11 +8,6 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory inside the container
 WORKDIR /app
 
-# --- This is the key optimization step for ML models ---
-# First, copy the requirements file and install only sentence-transformers
-COPY requirements.txt .
-RUN pip install --no-cache-dir sentence-transformers
-
 # Now install the rest of your application's dependencies
 RUN pip install -r requirements.txt
 
