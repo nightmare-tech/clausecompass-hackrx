@@ -9,7 +9,7 @@ from rich.spinner import Spinner
 import typer
 
 # --- Configuration ---
-BASE_URL = os.getenv("HACKRX_API_URL", "http://localhost:8000")
+BASE_URL = os.getenv("HACKRX_API_URL", "http://clausecompass.34.47.175.13.sslip.io:8000")
 API_ENDPOINT = "/hackrx/run"
 # This is the hardcoded token from the problem statement
 AUTH_TOKEN = "e66c2e8eb6884ded2c7177421784e760b34b9297bfebc20a2a272cc63357270d"
