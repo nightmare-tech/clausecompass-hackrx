@@ -8,18 +8,8 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory inside the container
 WORKDIR /app
 
-# --- This is the key optimization step for ML models ---
-# First, copy the requirements file and install only sentence-transformers
-COPY requirements.txt .
-RUN pip install --no-cache-dir sentence-transformers
-
-# Now, run a Python command to download and cache the model.
-# This happens ONCE during the build on your powerful GCP server.
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L-v2', cache_folder='./model_cache')"
-# --- End of optimization step ---
-
 # Now install the rest of your application's dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy all your application code (app.py, cli.py, etc.) into the container
 COPY . .
