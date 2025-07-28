@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Now install the rest of your application's dependencies
-RUN pip install -r ./../requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy all your application code (app.py, cli.py, etc.) into the container
 COPY . .
