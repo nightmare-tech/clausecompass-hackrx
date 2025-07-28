@@ -1,0 +1,32 @@
+# Use an official, lightweight Python runtime as a parent image
+FROM python:3.11-slim
+
+# Set environment variables for a clean and efficient Python environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# --- This is the key optimization step for ML models ---
+# First, copy the requirements file and install only sentence-transformers
+COPY requirements.txt .
+RUN pip install --no-cache-dir sentence-transformers
+
+# Now, run a Python command to download and cache the model.
+# This happens ONCE during the build on your powerful GCP server.
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L-v2', cache_folder='./model_cache')"
+# --- End of optimization step ---
+
+# Now install the rest of your application's dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all your application code (app.py, cli.py, etc.) into the container
+COPY . .
+
+# Expose the port that Uvicorn will run on. This is a signal to Coolify/Docker.
+EXPOSE 8000
+
+# The command to run your application when the container starts.
+# Use a FIXED port. Coolify will map traffic to this port automatically.
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
