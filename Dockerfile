@@ -8,15 +8,18 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory inside the container
 WORKDIR /app
 
-# Now install the rest of your application's dependencies
+# --- This is the key change ---
+# Instead of assuming the context is correct, we copy the entire repository content first.
+# The source directory '.' refers to the root of the cloned repository content.
+COPY . /app
+
+# Now that all files are inside /app, we can run our commands.
+
+# --- Optimized Installation ---
+# Combine all pip installs into a single RUN command to reduce image layers.
 RUN pip install -r requirements.txt
-
-# Copy all your application code (app.py, cli.py, etc.) into the container
-COPY . .
-
-# Expose the port that Uvicorn will run on. This is a signal to Coolify/Docker.
+# Expose the port that Uvicorn will run on.
 EXPOSE 8000
 
 # The command to run your application when the container starts.
-# Use a FIXED port. Coolify will map traffic to this port automatically.
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
