@@ -19,6 +19,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
+import asyncio
+
 # --- Logging Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -140,10 +142,14 @@ def answer_question_with_rag(question: str, vector_store: FAISS) -> str:
           dependencies=[Depends(verify_token)])
 async def run_submission(payload: HackRxRequest):
     vector_store = process_document_from_url(str(payload.documents))
+    tasks = []
     answers = []
     for question in payload.questions:
-        answer = answer_question_with_rag(question, vector_store)
-        answers.append(answer)
+        tasks.append(asyncio.create_task(answer_question_with_rag(question, vector_store)))
+    logger.info(f"Starting {len(tasks)} RAG queries in parallel...")
+    answers = await asyncio.gather(**tasks)
+    logger.info("All RAG queries have completed.")
+
     return HackRxResponse(answers=answers)
 
 # --- Main Guard ---
