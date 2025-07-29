@@ -20,12 +20,15 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 # --- Logging Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+
+executor = ThreadPoolExecutor(max_workers=10)
 
 # --- Initialize Global Objects ---
 app = FastAPI(
@@ -142,12 +145,21 @@ def answer_question_with_rag(question: str, vector_store: FAISS) -> str:
           dependencies=[Depends(verify_token)])
 async def run_submission(payload: HackRxRequest):
     vector_store = process_document_from_url(str(payload.documents))
+    loop = asyncio.get_running_loop()
+
     tasks = []
     answers = []
     for question in payload.questions:
-        tasks.append(asyncio.create_task(answer_question_with_rag(question, vector_store)))
+        task = loop.run_in_executor(
+            executor, 
+            answer_question_with_rag, # The function to run
+            question,                 # The first argument to the function
+            vector_store              # The second argument to the function
+        )
+        tasks.append(task)
+
     logger.info(f"Starting {len(tasks)} RAG queries in parallel...")
-    answers = await asyncio.gather(**tasks)
+    answers = await asyncio.gather(*tasks)
     logger.info("All RAG queries have completed.")
 
     return HackRxResponse(answers=answers)
