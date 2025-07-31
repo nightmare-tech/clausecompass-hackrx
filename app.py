@@ -42,7 +42,7 @@ client = genai.Client()
 # --- END NEW CLIENT ---
 
 # Load Embedding Model
-EMBEDDING_MODEL_NAME = 'paraphrase-MiniLM-L3-v2'
+EMBEDDING_MODEL_NAME = 'all-MiniLM-L6-v2'
 try:
     embedding_model = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
