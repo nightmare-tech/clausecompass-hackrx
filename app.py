@@ -19,6 +19,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
+
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
@@ -41,7 +42,7 @@ client = genai.Client()
 # --- END NEW CLIENT ---
 
 # Load Embedding Model
-EMBEDDING_MODEL_NAME = 'all-MiniLM-L6-v2'
+EMBEDDING_MODEL_NAME = 'paraphrase-MiniLM-L3-v2'
 try:
     embedding_model = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
