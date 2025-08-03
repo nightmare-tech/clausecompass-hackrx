@@ -9,6 +9,7 @@ langchain-community==0.0.38
 faiss-cpu
 google-genai
 asyncio
+flashrank
 
 # Dependencies for unstructured to handle different file types
 unstructured[docx,eml,pdf]
