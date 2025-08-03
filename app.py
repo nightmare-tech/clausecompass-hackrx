@@ -44,7 +44,6 @@ embedding_model = HuggingFaceEmbeddings(
     model_kwargs={'device': 'cpu'},
     encode_kwargs={'normalize_embeddings': True}
 )
-reranker = Ranker(model_name="ms-marco-MiniLM-L-12-v2")
 client = genai.Client()
 
 
@@ -79,7 +78,7 @@ def process_document_from_url(doc_url: str) -> FAISS:
         
         loader = UnstructuredFileLoader(tmp_file_path)
         docs = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
         chunks = text_splitter.split_documents(docs)
         if not chunks:
             raise HTTPException(status_code=400, detail="Could not extract content.")
@@ -91,17 +90,24 @@ def process_document_from_url(doc_url: str) -> FAISS:
         if tmp_file_path and os.path.exists(tmp_file_path):
             os.unlink(tmp_file_path)
 
+from flashrank import RerankRequest
 def answer_question_with_rag(question: str, vector_store: FAISS) -> str:
     """Answers a question using the RAG pipeline. This function is fast."""
-    # ... (This function remains unchanged) ...
     try:
         retrieved_docs = vector_store.similarity_search(question, k=20)
         if not retrieved_docs:
             return "Information not found in the provided documents."
-        passages = [doc.page_content for doc in retrieved_docs]
-        reranked_results = reranker.rerank([question, passages])
-        top_k_reranked = reranked_results[:5]
-        context_str = "\n---\n".join([p['text'] for p in top_k_reranked])
+        # passages_for_reranker = [
+        #     {"id": i, "text": doc.page_content} 
+        #     for i, doc in enumerate(retrieved_docs)
+        # ]
+        # request = RerankRequest(
+        #     query=question,
+        #     passages=passages_for_reranker,
+        # )
+        # reranked_results = reranker.rerank(request)
+        # top_k_reranked = reranked_results[:10]
+        context_str = "\n---\n".join([doc.page_content for doc in retrieved_docs])
         full_prompt = (
             "You are an expert AI assistant. Based ONLY on the CONTEXT provided, give a clear and concise answer to the QUESTION. "
             "If the answer is not in the CONTEXT, state 'The information is not available in the provided document.'\n\n"
@@ -109,7 +115,7 @@ def answer_question_with_rag(question: str, vector_store: FAISS) -> str:
             f"QUESTION:\n{question}\n\n"
             "ANSWER:"
         )
-        response = client.models.generate_content(model="gemini-1.5-flash-latest", contents=full_prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=full_prompt)
         return response.text.strip()
     except Exception as e:
         logger.error(f"Error during RAG for question '{question}': {e}", exc_info=True)
