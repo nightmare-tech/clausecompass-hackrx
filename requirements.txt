@@ -7,7 +7,7 @@ sentence-transformers
 langchain==0.1.20
 langchain-community==0.0.38
 faiss-cpu
-google-genai
+ai21
 asyncio
 flashrank
 
